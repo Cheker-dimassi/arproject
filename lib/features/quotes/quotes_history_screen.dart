@@ -5,8 +5,22 @@ import '../../core/theme.dart';
 import '../../data/quote_request.dart';
 import '../../widgets/state_message.dart';
 
-class QuotesHistoryScreen extends StatelessWidget {
+class QuotesHistoryScreen extends StatefulWidget {
   const QuotesHistoryScreen({super.key});
+
+  @override
+  State<QuotesHistoryScreen> createState() => _QuotesHistoryScreenState();
+}
+
+class _QuotesHistoryScreenState extends State<QuotesHistoryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Synchronise silencieusement les statuts a l'ouverture de l'ecran
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      QuoteHistory.instance.refreshQuotes();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +37,40 @@ class QuotesHistoryScreen extends StatelessWidget {
             final quotes = QuoteHistory.instance.quotes;
 
             if (quotes.isEmpty) {
-              return StateMessage(
-                icon: Icons.receipt_long_outlined,
-                title: s.noQuotes,
-                subtitle: s.noQuotesSubtitle,
+              return RefreshIndicator(
+                color: AppColors.gold,
+                backgroundColor: AppColors.surface,
+                onRefresh: () => QuoteHistory.instance.refreshQuotes(),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: StateMessage(
+                        icon: Icons.receipt_long_outlined,
+                        title: s.noQuotes,
+                        subtitle: s.noQuotesSubtitle,
+                      ),
+                    ),
+                  ],
+                ),
               );
             }
 
-            return ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-              itemCount: quotes.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 14),
-              itemBuilder: (context, index) {
-                final quote = quotes[index];
-                return _QuoteCard(quote: quote);
-              },
+            return RefreshIndicator(
+              color: AppColors.gold,
+              backgroundColor: AppColors.surface,
+              onRefresh: () => QuoteHistory.instance.refreshQuotes(),
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                itemCount: quotes.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 14),
+                itemBuilder: (context, index) {
+                  final quote = quotes[index];
+                  return _QuoteCard(quote: quote);
+                },
+              ),
             );
           },
         ),

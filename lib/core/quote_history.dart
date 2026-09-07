@@ -1,3 +1,4 @@
+import 'api_client.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +38,26 @@ class QuoteHistory extends ChangeNotifier {
     _quotes.insert(0, quote);
     await _save();
     notifyListeners();
+  }
+
+  /// Interroge le serveur pour synchroniser le statut de chaque devis
+  Future<void> refreshQuotes() async {
+    bool changed = false;
+    for (int i = 0; i < _quotes.length; i++) {
+      try {
+        final updated = await ApiClient.fetchQuote(_quotes[i].id);
+        if (updated.status != _quotes[i].status) {
+          _quotes[i] = updated;
+          changed = true;
+        }
+      } catch (_) {
+        // En cas d'erreur reseau, on conserve la version locale
+      }
+    }
+    if (changed) {
+      await _save();
+      notifyListeners();
+    }
   }
 
   Future<void> _save() async {

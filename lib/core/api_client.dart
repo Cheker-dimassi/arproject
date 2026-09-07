@@ -114,6 +114,16 @@ class ApiClient {
     return SubmittedQuote.fromJson(json);
   }
 
+  /// Consulte le statut en direct d'un devis donne
+  static Future<SubmittedQuote> fetchQuote(int id) async {
+    final response = await http.get(
+      Uri.parse('/'),
+    );
+    _throwIfError(response);
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    return SubmittedQuote.fromJson(json);
+  }
+
   static Future<List<SubmittedQuote>> fetchAllQuotesAdmin({
     required String username,
     required String password,
