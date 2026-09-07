@@ -1,6 +1,3 @@
-import '../../core/admin_session.dart';
-import '../admin/admin_login_screen.dart';
-import '../admin/admin_dashboard_screen.dart';
 import '../../core/quote_history.dart';
 import '../quotes/quotes_history_screen.dart';
 import 'package:flutter/material.dart';
@@ -47,9 +44,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: AppLanguage.values.map((lang) {
                       final name = switch (lang) {
-                        AppLanguage.fr => 'Fran\u00e7ais',
+                        AppLanguage.fr => 'Français',
                         AppLanguage.en => 'English',
-                        AppLanguage.ar => '\u0627\u0644\u0639\u0631\u0628\u064a\u0629',
+                        AppLanguage.ar => 'العربية',
                       };
                       final selected = currentLang == lang;
 
@@ -58,13 +55,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(10),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          margin: const EdgeInsets.symmetric(vertical: 3),
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                          margin: const EdgeInsets.only(bottom: 4),
                           decoration: BoxDecoration(
-                            color: selected ? AppColors.gold.withValues(alpha: 0.12) : Colors.transparent,
+                            color: selected
+                                ? AppColors.gold.withValues(alpha: 0.12)
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: selected ? AppColors.gold.withValues(alpha: 0.35) : Colors.transparent,
+                              color: selected ? AppColors.gold : Colors.transparent,
                               width: 1,
                             ),
                           ),
@@ -74,14 +73,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Text(
                                   name,
                                   style: TextStyle(
-                                    fontSize: 14.5,
-                                    fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                                    fontSize: 14,
+                                    fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
                                     color: selected ? AppColors.gold : AppColors.textPrimary,
                                   ),
                                 ),
                               ),
                               if (selected)
-                                const Icon(Icons.check_circle, color: AppColors.gold, size: 20),
+                                const Icon(Icons.check_circle, color: AppColors.gold, size: 18),
                             ],
                           ),
                         ),
@@ -93,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // Favorites card
                 _SectionCard(
-                  icon: Icons.favorite,
+                  icon: Icons.favorite_border,
                   title: s.favorites,
                   child: InkWell(
                     onTap: () {
@@ -133,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                                // Quotes card
+                // Quotes card
                 _SectionCard(
                   icon: Icons.receipt_long_outlined,
                   title: s.myQuotes,
@@ -171,78 +170,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                                // Admin Portal Card
-                _SectionCard(
-                  icon: Icons.admin_panel_settings_outlined,
-                  title: s.adminPortal,
-                  child: ListenableBuilder(
-                    listenable: AdminSession.instance,
-                    builder: (context, _) {
-                      final isLoggedIn = AdminSession.instance.isLoggedIn;
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => isLoggedIn
-                                  ? const AdminDashboardScreen()
-                                  : const AdminLoginScreen(),
-                            ),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      s.adminPortal,
-                                      style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      isLoggedIn
-                                          ? 'Connecté (${AdminSession.instance.username})'
-                                          : s.adminSubtitle,
-                                      style: TextStyle(
-                                        fontSize: 11.5,
-                                        color: isLoggedIn ? AppColors.gold : AppColors.textSecondary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (isLoggedIn)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.gold.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Text(
-                                    'Admin',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.gold,
-                                    ),
-                                  ),
-                                ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward_ios, size: 13, color: AppColors.textSecondary),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
                   ),
                 ),
                 const SizedBox(height: 14),

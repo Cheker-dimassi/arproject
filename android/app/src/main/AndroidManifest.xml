@@ -34,16 +34,20 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
-
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
+        <!-- Required for Flutter text processing plugin -->
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Required for Google Scene Viewer / ARCore on Android 11+ (API 30+).
+             Without this, startActivity(sceneViewerIntent) silently fails because
+             the package visibility restrictions introduced in Android 11 prevent the
+             app from resolving implicit intents to arvr.google.com without an explicit
+             <queries> declaration. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" android:host="arvr.google.com" />
+        </intent>
     </queries>
 </manifest>
-

@@ -1,4 +1,3 @@
-import 'core/admin_session.dart';
 import 'core/api_client.dart';
 import 'core/quote_history.dart';
 import 'core/cart.dart';
@@ -15,7 +14,6 @@ void main() async {
   await Favorites.instance.init();
   await Cart.instance.init();
   await QuoteHistory.instance.init();
-  await AdminSession.instance.init();
   await AppL10n.init();
   await ApiClient.loadCache();
   final prefs = await SharedPreferences.getInstance();
