@@ -146,3 +146,11 @@ This repository adheres to a pull request workflow with semantic branch naming:
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+
+---
+
+## 👥 Engineering Team & Credits
+
+- **Cheker Dimassi** ([@Cheker-dimassi](https://github.com/Cheker-dimassi)) — Mobile Client Engineering, ARCore Spatial Tracking & UI Architecture
+- **Ayoub Gaouet** ([@ayoubgaouet](https://github.com/ayoubgaouet)) — Backend Services, Spring Boot 3 API & Model Pipelines
