@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_config.dart';
 import '../data/article.dart';
 import '../data/quote_request.dart';
+import '../data/reconstruction_job.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -156,6 +158,47 @@ class ApiClient {
     _throwIfError(response);
     final json = jsonDecode(response.body) as Map<String, dynamic>;
     return SubmittedQuote.fromJson(json);
+  }
+
+  /// Envoie une photo et demarre la generation du modele 3D asynchrone.
+  /// Necessite l'authentification admin (Basic Auth).
+  static Future<ReconstructionJob> startReconstruction({
+    required String articleId,
+    required File photo,
+    required String adminUsername,
+    required String adminPassword,
+  }) async {
+    final uri = Uri.parse('${AppConfig.articlesEndpoint}/$articleId/generate-3d');
+
+    final request = http.MultipartRequest('POST', uri);
+    final credentials = base64Encode(utf8.encode('$adminUsername:$adminPassword'));
+    request.headers['Authorization'] = 'Basic $credentials';
+
+    request.files.add(await http.MultipartFile.fromPath(
+      'photo',
+      photo.path,
+    ));
+
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    _throwIfError(response);
+
+    return ReconstructionJob.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// GET /api/articles/{id}/generate-3d/status
+  /// Interroge le statut du dernier job de reconstruction pour un article.
+  /// Endpoint public - pas d'auth requise.
+  static Future<ReconstructionJob> getReconstructionStatus(
+      String articleId) async {
+    final uri = Uri.parse('${AppConfig.articlesEndpoint}/$articleId/generate-3d/status');
+    final response = await http.get(uri);
+    _throwIfError(response);
+    return ReconstructionJob.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 
   static void _throwIfError(http.Response response) {

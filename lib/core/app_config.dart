@@ -8,4 +8,8 @@ class AppConfig {
 
   static const String articlesEndpoint = '$apiBaseUrl/api/articles';
   static const String quotesEndpoint = '$apiBaseUrl/api/quotes';
+
+  // Identifiants admin pour les operations de gestion du catalogue.
+  static const String adminUsername = 'admin';
+  static const String adminPassword = 'changeme';
 }
