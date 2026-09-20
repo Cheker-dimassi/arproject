@@ -7,6 +7,7 @@ import '../../core/theme.dart';
 import '../../core/l10n.dart';
 import '../../data/article.dart';
 import '../quote/quote_form_screen.dart';
+import '../reconstruction/generate_3d_screen.dart';
 
 class ArticleDetailScreen extends StatefulWidget {
   final Article article;
@@ -188,6 +189,28 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                         MaterialPageRoute(builder: (_) => QuoteFormScreen.single(article: article)),
                       ),
                       child: Text(AppL10n.s.requestSingleQuote),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => Generate3dScreen(article: article),
+                        ),
+                      ),
+                      icon: const Icon(Icons.auto_awesome, size: 18),
+                      label: const Text('Générer un modèle 3D'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.gold,
+                        side: const BorderSide(color: AppColors.gold, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
